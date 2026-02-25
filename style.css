@@ -1,1 +1,29 @@
+body {
+  text-align: center;
+  font-family: Arial;
+  background: #0f172a;
+  color: white;
+}
 
+.hidden {
+  display: none;
+}
+
+#gameArea {
+  width: 90%;
+  height: 400px;
+  margin: auto;
+  position: relative;
+  background: #1e293b;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.bubble {
+  width: 50px;
+  height: 50px;
+  background: pink;
+  border-radius: 50%;
+  position: absolute;
+  cursor: pointer;
+}
