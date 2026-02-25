@@ -1,105 +1,65 @@
-// Talent Turf - Phase 1 Psychometric Engine
+let score = 0;
+let timeLeft = 30;
+let gameInterval;
 
-// Personality Score Object
-let score = {
-  introvert: 0,
-  extrovert: 0,
-  analytical: 0,
-  creative: 0
-};
+function login() {
+  let mobile = document.getElementById("mobile").value;
 
-// Questions Data
-const questions = [
-  {
-    question: "You enjoy spending your free time:",
-    options: [
-      { text: "Reading or alone activities", type: "introvert" },
-      { text: "Hanging out with friends", type: "extrovert" },
-      { text: "Solving logical puzzles", type: "analytical" },
-      { text: "Drawing or creating something", type: "creative" }
-    ]
-  },
-  {
-    question: "In a group project you usually:",
-    options: [
-      { text: "Work quietly on your part", type: "introvert" },
-      { text: "Lead discussions", type: "extrovert" },
-      { text: "Plan strategy", type: "analytical" },
-      { text: "Bring creative ideas", type: "creative" }
-    ]
-  },
-  {
-    question: "You make decisions based on:",
-    options: [
-      { text: "Personal feelings", type: "introvert" },
-      { text: "People's opinions", type: "extrovert" },
-      { text: "Facts and data", type: "analytical" },
-      { text: "Imagination and vision", type: "creative" }
-    ]
-  },
-  {
-    question: "You feel energized when:",
-    options: [
-      { text: "Spending time alone", type: "introvert" },
-      { text: "Talking to many people", type: "extrovert" },
-      { text: "Solving complex problems", type: "analytical" },
-      { text: "Designing new ideas", type: "creative" }
-    ]
-  },
-  {
-    question: "Your strongest skill is:",
-    options: [
-      { text: "Deep thinking", type: "introvert" },
-      { text: "Communication", type: "extrovert" },
-      { text: "Critical analysis", type: "analytical" },
-      { text: "Innovation", type: "creative" }
-    ]
-  }
-];
-
-let currentQuestionIndex = 0;
-
-// Start Quiz
-function loadQuestion() {
-  const questionContainer = document.getElementById("question");
-  const optionsContainer = document.getElementById("options");
-
-  optionsContainer.innerHTML = "";
-
-  let currentQuestion = questions[currentQuestionIndex];
-  questionContainer.innerText = currentQuestion.question;
-
-  currentQuestion.options.forEach(option => {
-    let button = document.createElement("button");
-    button.innerText = option.text;
-    button.onclick = () => selectAnswer(option.type);
-    optionsContainer.appendChild(button);
-  });
-}
-
-// Select Answer
-function selectAnswer(type) {
-  score[type]++;
-  currentQuestionIndex++;
-
-  if (currentQuestionIndex < questions.length) {
-    loadQuestion();
+  if (mobile.length === 10) {
+    document.getElementById("login").classList.add("hidden");
+    document.getElementById("menu").classList.remove("hidden");
   } else {
-    showResult();
+    alert("Enter valid 10 digit number");
   }
 }
 
-// Show Final Result
-function showResult() {
-  document.getElementById("quiz").style.display = "none";
+function startGame(mode) {
+  document.getElementById("menu").classList.add("hidden");
+  document.getElementById("game").classList.remove("hidden");
 
-  let highest = Object.keys(score).reduce((a, b) =>
-    score[a] > score[b] ? a : b
-  );
+  score = 0;
+  timeLeft = 30;
+  document.getElementById("score").innerText = score;
+  document.getElementById("time").innerText = timeLeft;
 
-  document.getElementById("result").innerHTML =
-    "<h2>Your Personality Type:</h2><h1>" + highest.toUpperCase() + "</h1>";
+  gameInterval = setInterval(() => {
+    timeLeft--;
+    document.getElementById("time").innerText = timeLeft;
+
+    if (mode === "random") {
+      createBubble();
+    }
+
+    if (mode === "speed") {
+      createBubble();
+      createBubble();
+    }
+
+    if (timeLeft <= 0) {
+      clearInterval(gameInterval);
+      alert("Game Over! Score: " + score);
+      location.reload();
+    }
+
+  }, 1000);
 }
 
-// Initialize on Page Load
-window.onload = loadQuestion;
+function createBubble() {
+  const bubble = document.createElement("div");
+  bubble.classList.add("bubble");
+
+  bubble.style.top = Math.random() * 350 + "px";
+  bubble.style.left = Math.random() * 80 + "%";
+
+  bubble.onclick = function () {
+    score++;
+    document.getElementById("score").innerText = score;
+    bubble.remove();
+  };
+
+  document.getElementById("gameArea").appendChild(bubble);
+
+  setTimeout(() => {
+    bubble.remove();
+  }, 2000);
+}
