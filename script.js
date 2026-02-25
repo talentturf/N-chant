@@ -1,63 +1,28 @@
-let score = 0;
-let timeLeft = 30;
-let gameInterval;
-
-function login() {
-  let mobile = document.getElementById("mobile").value;
-
-  if (mobile.length === 10) {
-    document.getElementById("login").classList.add("hidden");
-    document.getElementById("menu").classList.remove("hidden");
-  } else {
-    alert("Enter valid 10 digit number");
-  }
-}
-
-function startGame(mode) {
-  document.getElementById("menu").classList.add("hidden");
-  document.getElementById("game").classList.remove("hidden");
-
-  score = 0;
-  timeLeft = 30;
-  document.getElementById("score").innerText = score;
-  document.getElementById("time").innerText = timeLeft;
-
-  gameInterval = setInterval(() => {
-    timeLeft--;
-    document.getElementById("time").innerText = timeLeft;
-
-    if (mode === "random") {
-      createBubble();
-    }
-
-    if (mode === "speed") {
-      createBubble();
-      createBubble();
-    }
-
-    if (timeLeft <= 0) {
-      clearInterval(gameInterval);
-      alert("Game Over! Score: " + score);
-      location.reload();
-    }
-
-  }, 1000);
-}
-
 function createBubble() {
+  const gameArea = document.getElementById("gameArea");
   const bubble = document.createElement("div");
+
   bubble.classList.add("bubble");
 
-  bubble.style.top = Math.random() * 350 + "px";
-  bubble.style.left = Math.random() * 80 + "%";
+  let size = Math.random() * 40 + 40; // 40–80px
+  bubble.style.width = size + "px";
+  bubble.style.height = size + "px";
+  bubble.style.background = "pink";
+
+  // Get game area width dynamically
+  let areaWidth = gameArea.clientWidth;
+  let areaHeight = gameArea.clientHeight;
+
+  bubble.style.left = Math.random() * (areaWidth - size) + "px";
+  bubble.style.top = Math.random() * (areaHeight - size) + "px";
 
   bubble.onclick = function () {
-    score++;
+    score += 10;
     document.getElementById("score").innerText = score;
     bubble.remove();
   };
 
-  document.getElementById("gameArea").appendChild(bubble);
+  gameArea.appendChild(bubble);
 
   setTimeout(() => {
     bubble.remove();
